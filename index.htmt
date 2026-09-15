@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Our Living Classrooms | Protect Oklahoma's Beauty</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    :root {
+      --primary-green: #2e6f40;
+      --dark-forest: #1b4332;
+      --cream-bg: #f7f9f6;
+      --text-dark: #2d3748;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--cream-bg);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: var(--primary-green);
+      color: white;
+      padding: 1.25rem 1rem;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1.75rem;
+    }
+
+    header p {
+      margin: 0;
+      opacity: 0.9;
+      font-size: 0.95rem;
+    }
+
+    #tracker {
+      background: var(--dark-forest);
+      color: white;
+      padding: 0.6rem 1rem;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+    }
+
+    #main-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1rem;
+      gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      #main-container {
+        flex-direction: row;
+      }
+    }
+
+    #sidebar {
+      flex: 1;
+      background: white;
+      padding: 1.25rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    #map {
+      flex: 2;
+      min-height: 450px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .story-card {
+      background: #f0f5f1;
+      border-left: 4px solid var(--primary-green);
+      padding: 0.75rem 1rem;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+    }
+
+    .story-card h4 {
+      margin: 0 0 0.25rem 0;
+      color: var(--dark-forest);
+    }
+
+    .story-card p {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.85rem;
+      color: #718096;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Our Living Classrooms</h1>
+    <p>Mapping the Oklahoma places our educators love & protect</p>
+  </header>
+
+  <div id="tracker">
+    🏁 77-COUNTY CHALLENGE: <span id="county-count">1</span> / 77 Counties Unlocked
+  </div>
+
+  <div id="main-container">
+    <div id="sidebar">
+      <h3>Explore The Map</h3>
+      <p style="font-size:0.9rem; color:#4a5568;">
+        Click any green pin to read stories from educators across Oklahoma.
+      </p>
+
+      <div id="latest-story">
+        <!-- Story details will populate here on pin click -->
+        <div class="story-card">
+          <h4>Tahlequah, Cherokee County</h4>
+          <p><em>"Select a pin on the map to view a story!"</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div id="map"></div>
+  </div>
+
+  <footer>
+    Our Living Classrooms • Nonpartisan Community Project
+  </footer>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    // 1. Initialize Map centered on Oklahoma
+    const map = L.map('map').setView([35.55, -97.40], 7);
+
+    // 2. OpenStreetMap Tile Layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 18
+    }).addTo(map);
+
+    // 3. Array of Member Stories (We will update this list as comments come in!)
+    const stories = [
+      {
+        title: "Illinois River Basin",
+        county: "Cherokee County",
+        town: "Tahlequah",
+        coords: [35.9154, -94.9700],
+        story: "Clear water, scenic bluffs, and outdoor classrooms for generations of eastern Oklahoma students.",
+        author: "Cherokee Co. Educator"
+      }
+    ];
+
+    // 4. Update County Counter
+    const uniqueCounties = new Set(stories.map(s => s.county)).size;
+    document.getElementById('county-count').innerText = uniqueCounties;
+
+    // 5. Plot Markers on Map
+    stories.forEach(item => {
+      const marker = L.marker(item.coords).addTo(map);
+
+      // Popup content
+      const popupContent = `
+        <div style="font-family:sans-serif;">
+          <strong style="color:#2e6f40; font-size:1rem;">${item.title}</strong><br>
+          <small><b>${item.town}</b> (${item.county})</small><br><br>
+          "${item.story}"<br>
+          <small style="color:#718096;">— ${item.author}</small>
+        </div>
+      `;
+
+      marker.bindPopup(popupContent);
+
+      // Update sidebar on marker click
+      marker.on('click', () => {
+        document.getElementById('latest-story').innerHTML = `
+          <div class="story-card">
+            <h4>${item.title} — ${item.town}</h4>
+            <p><strong>${item.county}</strong></p>
+            <p style="margin-top:0.5rem;">"${item.story}"</p>
+            <small style="display:block; margin-top:0.5rem; color:#718096;">— ${item.author}</small>
+          </div>
+        `;
+      });
+    });
+  </script>
+</body>
+</html>
