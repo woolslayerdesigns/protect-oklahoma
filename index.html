@@ -134,24 +134,37 @@
 
   <div id="main-container">
     <div id="sidebar">
-      <h3>Explore The Map</h3>
-      <p style="font-size:0.9rem; color:#4a5568;">
-        Click any pin to read stories from educators across Oklahoma.
-      </p>
+  <h3>Explore The Map</h3>
+  <p style="font-size:0.9rem; color:#4a5568;">
+    Click any pin to read stories from educators across Oklahoma.
+  </p>
 
-      <div id="latest-story">
-        <div class="story-card">
-          <h4>Tahlequah, Cherokee County</h4>
-          <p><em>"Select a pin on the map to view a story!"</em></p>
-        </div>
-      </div>
+  <!-- Active Story Output -->
+  <div id="latest-story">
+    <div class="story-card">
+      <h4>Tahlequah, Cherokee County</h4>
+      <p><em>"Select a pin on the map to view a story!"</em></p>
     </div>
+  </div>
+
+  <!-- Political Call to Action Block directly underneath -->
+  <div class="action-card" style="background:#1b4332; color:white; padding:1rem; border-radius:6px; margin-top:1rem;">
+    <h4 style="margin:0 0 0.5rem 0; color:#ffffff;">Defend Our Spaces</h4>
+    <p style="font-size:0.85rem; margin:0 0 1rem 0; line-height:1.4;">
+      Our local places need leaders who will actively protect them. Check your voter status and make your voice heard this election.
+    </p>
+    <a href="https://oklahoma.gov/elections/voters/okvoterportal.html" target="_blank" 
+       style="display:inline-block; background:#2e6f40; color:white; padding:0.5rem 1rem; text-decoration:none; border-radius:4px; font-size:0.85rem; font-weight:bold;">
+      Check Your Voter Status →
+    </a>
+  </div>
+</div>
 
     <div id="map"></div>
   </div>
 
   <footer>
-    Protect Oklahoma • Nonpartisan Community Project
+    Protect Oklahoma • Independent Community Project
   </footer>
 
   <!-- Leaflet JS -->
