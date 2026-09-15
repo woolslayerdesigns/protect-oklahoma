@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Our Living Classrooms | Protect Oklahoma's Beauty</title>
+  <title>Protect Oklahoma | Our Living Classrooms</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -37,7 +37,8 @@
 
     header h1 {
       margin: 0 0 0.25rem 0;
-      font-size: 1.75rem;
+      font-size: 1.85rem;
+      letter-spacing: 0.5px;
     }
 
     header p {
@@ -123,8 +124,8 @@
 <body>
 
   <header>
-    <h1>Our Living Classrooms</h1>
-    <p>Mapping the Oklahoma places our educators love & protect</p>
+    <h1>Protect Oklahoma</h1>
+    <p>Mapping the local places our educators love, teach in, and protect</p>
   </header>
 
   <div id="tracker">
@@ -135,11 +136,10 @@
     <div id="sidebar">
       <h3>Explore The Map</h3>
       <p style="font-size:0.9rem; color:#4a5568;">
-        Click any green pin to read stories from educators across Oklahoma.
+        Click any pin to read stories from educators across Oklahoma.
       </p>
 
       <div id="latest-story">
-        <!-- Story details will populate here on pin click -->
         <div class="story-card">
           <h4>Tahlequah, Cherokee County</h4>
           <p><em>"Select a pin on the map to view a story!"</em></p>
@@ -151,7 +151,7 @@
   </div>
 
   <footer>
-    Our Living Classrooms • Nonpartisan Community Project
+    Protect Oklahoma • Nonpartisan Community Project
   </footer>
 
   <!-- Leaflet JS -->
@@ -161,13 +161,14 @@
     // 1. Initialize Map centered on Oklahoma
     const map = L.map('map').setView([35.55, -97.40], 7);
 
-    // 2. OpenStreetMap Tile Layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors',
-      maxZoom: 18
+    // 2. Reliable CARTO Map Tile Layer (Prevents 403 Tile Errors)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 20
     }).addTo(map);
 
-    // 3. Array of Member Stories (We will update this list as comments come in!)
+    // 3. Array of Member Stories
     const stories = [
       {
         title: "Illinois River Basin",
@@ -187,7 +188,6 @@
     stories.forEach(item => {
       const marker = L.marker(item.coords).addTo(map);
 
-      // Popup content
       const popupContent = `
         <div style="font-family:sans-serif;">
           <strong style="color:#2e6f40; font-size:1rem;">${item.title}</strong><br>
@@ -199,7 +199,6 @@
 
       marker.bindPopup(popupContent);
 
-      // Update sidebar on marker click
       marker.on('click', () => {
         document.getElementById('latest-story').innerHTML = `
           <div class="story-card">
